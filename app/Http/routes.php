@@ -19,6 +19,10 @@ Route::get('/', function () {
 
 Route::group( ['middleware' => ['web']], function(){
 
+  Route::get('/',[
+    'uses' => 'NiceActionController@getHome',
+    'as' => 'home'
+  ]);
   // Ruta que recibe de parametro o no el atributo name, en la vista
   // puede ser utilizado como {{ $name }}
   Route::group(['prefix' => 'do'], function(){
