@@ -16,36 +16,40 @@ Route::get('/', function () {
 })->name('home');
 
 
-// Ruta que recibe de parametro o no el atributo name, en la vista
-// puede ser utilizado como {{ $name }}
 
-Route::group(['prefix' => 'do'], function(){
+Route::group( ['middleware' => ['web']], function(){
 
-  Route::get('greet/{name?}', function($name = null) {
-    return view( 'actions.greet', ['name' => $name] );
-  })->name('greet');
+  // Ruta que recibe de parametro o no el atributo name, en la vista
+  // puede ser utilizado como {{ $name }}
+  Route::group(['prefix' => 'do'], function(){
 
-  Route::get('form', function () {
-      return view('actions.form');
-  })->name('formPrueba');
+    Route::get('greet/{name?}', function($name = null) {
+      return view( 'actions.greet', ['name' => $name] );
+    })->name('greet');
 
-  // No pude hechar a andar en $request['action'], me daba null
-  Route::post('recibeForm', function (\Illuminate\Http\Request $request) {
-    if ( strlen($request['nombre']) > 0 ){
-      return view( 'actions.recibeForm', ['request' => $request] );
-    }
-    return redirect()->back();
-  })->name('recibeForm');
+    Route::get('form', function () {
+        return view('actions.form');
+    })->name('formPrueba');
 
-  // Usando la ruta, pero ahora enviando valores a un controlador
-  Route::get('/{action}/{name?}', [
-    'uses' => 'NiceActionController@getNiceAction',
-    'as' => 'niceaction'
-  ]);
+    // No pude hechar a andar en $request['action'], me daba null
+    Route::post('recibeForm', function (\Illuminate\Http\Request $request) {
+      if ( strlen($request['nombre']) > 0 ){
+        return view( 'actions.recibeForm', ['request' => $request] );
+      }
+      return redirect()->back();
+    })->name('recibeForm');
 
-  Route::post('/form',[
-    'uses' => 'NiceActionController@postNiceAction',
-    'as' => 'recibeForm'
-  ]);
+    // Usando la ruta, pero ahora enviando valores a un controlador
+    Route::get('/{action}/{name?}', [
+      'uses' => 'NiceActionController@getNiceAction',
+      'as' => 'niceaction'
+    ]);
+
+    Route::post('/form',[
+      'uses' => 'NiceActionController@postNiceAction',
+      'as' => 'recibeForm'
+    ]);
+
+  });
 
 });

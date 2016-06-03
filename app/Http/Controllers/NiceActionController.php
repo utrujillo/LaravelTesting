@@ -13,12 +13,10 @@ class NiceActionController extends Controller
 
   public function postNiceAction(Request $request)
   {
-
-    if ( strlen($request['nombre']) > 0 ){
-      $request['nombre'] = $this->transformName( $request['nombre'] );
-      return view( 'actions.recibeForm', ['request' => $request] );
-    }
-    return redirect()->back();
+    $this->validate($request, [
+      'nombre' => 'required|alpha'
+    ]);
+    return view( 'actions.recibeForm', ['request' => $request] );
   }
 
   private function transformName($nombre)
